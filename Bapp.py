@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 # ---------------------------------------
 # HARD-CODED DATA (From your Excel file)
@@ -6,6 +7,13 @@ import streamlit as st
 years   = [2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025]
 budget  = [179,188,200,215,230,245,260,275,290,310,325,340]
 revenue = [155,162,175,190,205,220,210,225,240,260,280,295]
+
+# Create DataFrame for easier chart handling
+df = pd.DataFrame({
+    "Year": years,
+    "Budget": budget,
+    "Revenue": revenue
+})
 
 data = {
     "Year": years,
@@ -60,7 +68,7 @@ if page == "Overview":
     col3.metric("Budget Growth", f"{growth}%")
 
     st.subheader("📈 Budget Trend")
-    st.line_chart({"Budget": budget}, x=years)
+    st.line_chart(df, x="Year", y="Budget")
 
 # ---------------------------------------
 # PAGE: CHARTS
@@ -71,9 +79,9 @@ elif page == "Charts":
     variable = st.selectbox("Select Metric", ["Budget", "Revenue"])
 
     if variable == "Budget":
-        st.area_chart({"Budget": budget}, x=years)
+        st.area_chart(df, x="Year", y="Budget")
     else:
-        st.area_chart({"Revenue": revenue}, x=years)
+        st.area_chart(df, x="Year", y="Revenue")
 
 # ---------------------------------------
 # PAGE: COMPARISON
@@ -81,10 +89,7 @@ elif page == "Charts":
 elif page == "Comparison":
     st.header("📊 Budget vs Revenue")
 
-    st.bar_chart({
-        "Budget": budget,
-        "Revenue": revenue
-    }, x=years)
+    st.bar_chart(df, x="Year", y=["Budget", "Revenue"])
 
 # ---------------------------------------
 # PAGE: RAW DATA
